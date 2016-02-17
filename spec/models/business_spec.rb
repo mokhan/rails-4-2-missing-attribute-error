@@ -15,5 +15,19 @@ describe Business do
     it 'works' do
       business.agents.includes([:computer]).by_ip(query)
     end
+
+    it 'also fails' do
+      expect(->{
+        business.agents.by_internal_ip(query).select(:id)
+        + business.agents.by_external_ip(query).select(:id)
+      }).to_not raise_error
+    end
+
+    it 'also works' do
+      expect(->{
+        business.agents.by_internal_ip(query).pluck(:id)
+        + business.agents.by_external_ip(query).pluck(:id)
+      })
+    end
   end
 end
